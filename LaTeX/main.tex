@@ -1,0 +1,1470 @@
+%%%%%%%%%%%%%%%%% - PREÁMBULO - %%%%%%%%%%%%%%%%% 
+
+% ----------------- Documento ----------------- %
+% Se define el tipo de documento (en este caso un artículo), en hoja A4 con tamaño de fuente de 11pt, escrito en castellano, e indicando que el documento tendrá páginas distintas a izquierda y derecha ("twoside"):
+\documentclass[a4paper, 11pt, spanish, twoside]{article}
+% Los demás tipos de documentos así como sus características y opciones pueden consultarse en: https://en.wikibooks.org/wiki/LaTeX/Document_Structure#Document_classes
+% ---------------------------------------------- %
+
+
+% ------------------ Página -------------------- %
+% Se define el tamaño de las páginas, indicando el tamaño de los márgenes superior e inferior ("top" y "bottom"), e izquierdo y derecho ("left" y "right"):
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+% Se inserta el comando \raggedbottom para evitar que LaTeX rellene con espacios en blanco aquellas páginas que no alberguen suficiente contenido como para rellenarlas de forma "natural":
+\raggedbottom 
+% ---------------------------------------------- %
+
+
+% ------------- Paquetes generales ------------- %
+% Se importan distintos paquetes de propósito general:
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{float}
+\usepackage{caption}
+% ---------------------------------------------- %
+
+
+% ------------ Paquetes específicos ------------ %
+% Se importan distintos paquetes que será utilizados en momentos concretos del documento: 
+\usepackage{pdfpages} % Para insertar la portada en formato PDF.
+\usepackage{amssymb} % Para símbolos matemáticos.
+\usepackage{bm} % Para negrita en símbolos matemáticos.
+\usepackage{amsmath} % Para el entorno "split".
+\usepackage[hidelinks]{hyperref} % Para urls.
+\usepackage{longtable} % Para tablas largas.
+\usepackage{pgf} % Para gráficas en formato PGF.
+\usepackage{graphicx} % Para insertar imágenes.
+\usepackage{wrapfig} % Para posicionar imágenes alrededor del texto.
+\usepackage{fontawesome5} % Para utilizar iconos de "fontawesome".
+\usepackage{pdflscape}  % Para colocar páginas en formato apaisado.
+% ---------------------------------------------- %
+
+
+% ---------------- Numeración ------------------ %
+\counterwithin{table}{section} % Se numeran las tablas con respecto al capítulo en el que se encuentran.
+\counterwithin{figure}{section} % Se numeran las figuras con respecto al capítulo en el que se encuentran.
+\counterwithin{equation}{section} % Se numeran las ecuaciones con respecto al capítulo en el que se encuentran.
+% ---------------------------------------------- %
+
+
+% ------------- Página en blanco ----------------%
+% Se define un comando (\blankpage) para insertar una página totalmente en blanco (sin número de página, encabezado y pie de página):
+\usepackage{afterpage}
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \newpage}
+% ---------------------------------------------- %    
+
+
+% ----------- Formato de los párrafos -----------%
+% Se define el formato de los párrafos:
+\setlength{\parindent}{0pt} % Se elimina la sangría en comienzo de párrafo (0pt).
+\setlength{\parskip}{1em} % Se define el espacio entre dos párrafos (1em).
+% ---------------------------------------------- %    
+
+
+% -------------- Título adicional -------------- %
+% Se añade una profundidad adicional a los títulos (profundidad 4):
+\usepackage{titlesec}
+\setcounter{secnumdepth}{4} % Se fija en 4 la profundidad de numeración de títulos.
+\setcounter{tocdepth}{4} % Se fija en 4 la profundidad de títulos incluidos en el índice.
+% Se modifica el formato de \paragraph (título de profundidad 4) para adaptarlo al formato del resto de títulos:
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex} 
+% ---------------------------------------------- %    
+
+
+% --------- Encabezado y pie de página -------- %
+% El encabezado y pie de página forman parte del paquete fancyhdr:
+\usepackage{fancyhdr}
+\fancyhf{}
+\pagestyle{fancy}
+
+% Se ajusta el tamaño de fuente para el encabezado y pie de página (9pt)
+\fancyhf{\fontsize{2}{12}\selectfont}
+
+% Contenido del encabezado (\fancyhead):
+\fancyhead[RO]{Título del trabajo} % Texto que se coloca en el encabezado de las páginas impares (O -> 'Odd', o impar) a la izquierda (R -> 'Odd')
+\fancyhead[LE]{\nouppercase{\rightmark}} % Texto que se coloca en el encabezado de las páginas pares (E -> 'Even', o par) a la izquierda (L -> 'Left'). \rightmark se utiliza para insertar automáticamente el título de la sección correspondiente, y \nouppercase para que no aparezca todo en mayúsculas (formato por defecto de \rightmark).
+
+% Contenido del pie de página (\fancyfoot):
+\fancyfoot[RE]{Escuela  Técnica  Superior  de  Ingenieros  Industriales  (UPM)} % Texto que se coloca en el pie de página de las páginas pares (E -> 'Even', o par) a la derecha (R -> 'Right')
+\fancyfoot[LO]{Autor} % Texto que se coloca en el pie de página de las páginas impares (O -> 'Odd', o impar) a la izquierda (L -> 'Left')
+\fancyfoot[LE,RO]{\thepage} % El número de página (\thepage) se coloca a la izquierda en las páginas pares y a la derecha en las impares.
+
+% Se indica que sólo se quiere incorporar en \rightmark (utilizado más arriba) el título de la sección (y no de las subsecciones, subsubsecciones, etc.):
+\renewcommand{\sectionmark}[1]{\markright{\thesection. #1}}
+\renewcommand{\subsectionmark}[1]{}
+
+% Formato de la línea de separación horizontal:
+\renewcommand{\headrulewidth}{0.5pt} % Ancho de la línea del encabezado.
+\renewcommand{\footrulewidth}{0.5pt} % Ancho de la línea del pie de página.
+% ---------------------------------------------- % 
+
+  
+% -------------- Diagramas TikZ ---------------- %
+% Se importa el paquete TikZ para diagramas de propósito general (diagramas de bloques, de flujo, etc.):
+\usepackage{tikz}
+\usetikzlibrary{shadows, trees, shapes.geometric}
+\tikzset{
+every picture/.append style={
+  execute at begin picture={\deactivatequoting},
+  execute at end picture={\activatequoting}
+  }
+}
+% Se importa el paquete circuitikz para circuitos eléctricos:
+\usepackage{circuitikz}
+% ---------------------------------------------- % 
+
+
+% ----------- Gráficas con Geogebra ------------ %
+% Se importan los distintos paquetes para incorporar diagramas TikZ mediante Geogebra (paquetes adicionales a los importados en el bloque anterior, diagramas TikZ):
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.15}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows, babel}
+% ---------------------------------------------- % 
+
+
+% ------------- Diagramas de Gantt ------------- %
+% Se importan distintos paquetes y se realizan diferentes ajustes para representar insertar diagramas de Gantt en el documento:
+\usepackage{pgfgantt}
+\usepackage{geometry} 
+\usepackage{pdflscape} 
+\usepackage{ragged2e}
+\usepackage{translator}
+\ganttset{calendar week text={\small{\startday/\startmonth}}}
+\newcommand\textganttbar[5][]{%
+    \ganttbar[#1,bar/.append style={alias=tmp}]{#2}{#4}{#5}
+    \path 
+    let
+    \p1=(tmp.west),\p2=(tmp.east),
+    \n1={\x2-\x1},\n2={width("#3")},
+    \n3={ifthenelse(\n1>\n2,90,270)}
+    in
+    node [anchor=\n3,font=\footnotesize] at (tmp.north) {#3};
+}
+% ---------------------------------------------- % 
+
+
+% ----------- Fragmentos de código ------------- %
+% El paquete utilizado para insertar fragmentos de código en el documento es listings. En el presente bloque del preámbulo se definen ciertos parámetros de listings con el objetivo de adaptar dicho paquete a código escrito en Python.
+
+\usepackage{listings} % Paquete para insertar código. 
+\usepackage{xcolor} % Paquete para definir colores.
+
+% Se definen los distintos colores que se utilizan para resaltar ciertos elementos del código:
+\definecolor{codegreen}{rgb}{0.04314,0.6745,0.07843} % Verde.
+\definecolor{codegray}{rgb}{0.5,0.5,0.5} % Gris.
+\definecolor{codered}{rgb}{0.5373,0.02745,0.06275} % Rojo.
+\definecolor{codeblue}{rgb}{0.071,0.0258,0.9882} % Azul.
+\definecolor{codepurple}{rgb}{0.6,0.02745,0.5961} % Morado.
+
+% Se define el color de fondo:
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92} % Gris oscuro.
+
+% Se define el valor de ciertos parámetros de listings para adaptar dicho paquete a código escrito en Python:
+\lstdefinestyle{mystyle}{
+    % - General:
+    language=Python, % Lenguaje de programación.
+    basicstyle=\ttfamily\footnotesize, % Tipografía y tamaño de fuente.
+    % - Colores de los distintos elementos del código:
+    backgroundcolor=\color{backcolour}, % Color de fondo.  
+    commentstyle=\color{codegray}, % Color de los comentarios.
+    keywordstyle=\color{codeblue}, % Color de las palabras clave por defecto.
+    stringstyle=\color{codegreen}, % Color de los "string"
+    % - Palabras clave:
+    deletekeywords={print}, % Se elimina "print" del conjunto de palabras clave para posteriormente asignarle el color morado.
+    keywordstyle={[2]\ttfamily\color{codeblue}},
+    keywords=[2]{as}, % Se añaden las palabras clave de color azul.
+    keywordstyle={[3]\ttfamily\color{codepurple}},
+    keywords=[3]{True, False, ttk, list, None, dict, zip, range, len, print, float, sum}, % Se añaden las palabras clave de color morado.
+    keywordstyle={[4]\bfseries\ttfamily},
+    keywords=[4]{_read_excel}, % Se añaden las palabras clave en negrita.
+    emph={MyClass,__init__}, % Se añaden las palabras clave enfatizadas.   
+    % - Números de línea:
+    numberstyle=\tiny\color{codegray}, % Tamaño de fuente y color de los números de línea.
+    numbers=left, % Se colocan los números de línea en el lado izquierdo.                 
+    numbersep=5pt, % Separación horizontal de los números de línea.
+    % - Saltos a la línea, espacios, indentación:
+    breaklines=true, % Permitir saltos a la línea. 
+    breakatwhitespace=true, % Saltar a la línea únicamente al encontrar espacios.
+    postbreak = \mbox{{$\hookrightarrow$}\space}, % Se añade una flecha al cambiar de línea.
+    showspaces=false, % No mostrar los espacios. 
+    showstringspaces=false, % No mostrar los espacios en los "string".
+    keepspaces=true, % Mantener los espacios presentes en el código. 
+    tabsize=2, % Tamaño de indentación.
+    % - Título:
+    captionpos=b % Posición del título del fragmento de código (b=bottom - abajo).
+} 
+\lstset{style=mystyle} % Se asocia el estilo de listings al estilo que acaba de definirse ("mystyle")
+
+% Se realizan una serie de operaciones complementarias con el paquete listings (su comprensión no es necesaria para manejar dicho paquete):
+\makeatletter
+\def\lst@OpLiteratekey#1\@nil@{\let\lst@ifxopliterate\lst@if
+                             \def\lst@opliterate{#1}}
+\lst@Key{opliterate}{}{\@ifstar{\lst@true \lst@OpLiteratekey}
+                             {\lst@false\lst@OpLiteratekey}#1\@nil@}
+\lst@AddToHook{SelectCharTable}
+    {\ifx\lst@opliterate\@empty\else
+         \expandafter\lst@OpLiterate\lst@opliterate{}\relax\z@
+     \fi}
+\def\lst@OpLiterate#1#2#3{%
+    \ifx\relax#2\@empty\else
+        \lst@CArgX #1\relax\lst@CDef
+            {}
+            {\let\lst@next\@empty
+             \lst@ifxopliterate
+                \lst@ifmode \let\lst@next\lst@CArgEmpty \fi
+             \fi
+             \ifx\lst@next\@empty
+                 \ifx\lst@OutputBox\@gobble\else
+                   \lst@XPrintToken \let\lst@scanmode\lst@scan@m
+                   \lst@token{#2}\lst@length#3\relax
+                   \lst@XPrintToken
+                 \fi
+                 \let\lst@next\lst@CArgEmptyGobble
+             \fi
+             \lst@next}%
+            \@empty
+        \expandafter\lst@OpLiterate
+    \fi}
+
+\lstset{ 
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+  {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+  {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+  {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+  {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+  {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+  {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+  {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+  {Ã}{{\~A}}1 {ã}{{\~a}}1 {Õ}{{\~O}}1 {õ}{{\~o}}1
+  {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+  {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+  {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+  {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+  {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
+  {º}{{\textordmasculine}}1}
+
+\lstset{opliterate=
+   *{0}{{{\color{codered}0}}}1 {1}{{{\color{codered}1}}}1 
+   {2}{{{\color{codered}2}}}1 {3}{{{\color{codered}3}}}1 
+   {4}{{{\color{codered}4}}}1 {5}{{{\color{codered}5}}}1 
+   {6}{{{\color{codered}6}}}1 {7}{{{\color{codered}7}}}1 
+   {8}{{{\color{codered}8}}}1 {9}{{{\color{codered}9}}}1}
+
+\DeclareCaptionType{code}[Código][ÍNDICE DE CÓDIGOS] % Se define el entorno "Código" (de forma que al introducir un fragmento de código en el documento aparezca como: Código 1.1: ...), y la lista con los distintos códigos ("Índice de códigos").
+\counterwithin{code}{section} % Se numeran los códigos con respecto al capítulo en el que se encuentran.
+% ---------------------------------------------- % 
+
+
+% --------------- Bibliografía ----------------- %
+% El manejo de la bibliografía se realiza mediante el paquete biblatex:
+\usepackage[backend=biber, style=authoryear, sorting=nyt, citestyle=authoryear, maxcitenames=2, maxbibnames=5, giveninits=true, uniquename=init]{biblatex} 
+
+% Los distintos parámetros que aparecen en la línea anterior corresponden a las siguientes características de la bibliografía:
+% - style: la manera en la que aparecen las referencias en la bibliografía. En este caso se opta por "authoryear", pero existen múltiples estilos posibles que se resumen en la siguiente guía: https://www.overleaf.com/learn/latex/biblatex_bibliography_styles.
+% - sorting: orden en el que aparecen las distintas referencias en la bibliografía. En este caso se opta por ordenarlas en primer lugar por el apellido del primer autor, en segundo lugar por el año de publicación, y por último por el título de la publicación (nyt=name-year-title)
+% - citestyle: elementos y orden de dichos elementos de una referencia al citarla en el documento. En este caso se escoge "authoryear" para que aparezca en primer lugar el apellido del autor (o de los autores) y en segundo lugar el año de publicación. Existe gran variedad de opciones en cuanto al parámetro citestyle que se resumen en: https://www.overleaf.com/learn/latex/biblatex_citation_styles.
+% maxcitenames: máximo número de autores que aparecen al citar una referencia en el documento. Al escoger un valor de 2 para este parámetro se pueden dar los siguientes casos: un único autor -> (autor, año), dos autores -> (autor 1 y/e autor 2, año), tres o más autores -> (autor 1 et al., año).
+% maxbibnames: parámetro idéntico al anterior pero para la bibliografía en lugar de las citas.
+% giveinits y uniquename: para mostrar únicamente las iniciales de los nombres de los autores.
+
+% Se importa el paquete csquotes para citar las referencias a lo largo del documento:
+\usepackage{csquotes} 
+
+% Se realizan una serie de operaciones para adaptar la bibliografía al estilo deseado (coma entre autor y año al citar una referencia, idioma castellano, etc.):
+\DeclareNameAlias{sortname}{family-given}
+\renewcommand*{\nameyeardelim}{\addcomma\space}
+\setlength\bibitemsep{\baselineskip}
+\DefineBibliographyStrings{spanish}{%
+  andothers = {et\addabbrvspace al\adddot}
+}
+
+\makeatletter
+
+\newrobustcmd*{\parentexttrack}[1]{%
+  \begingroup
+  \blx@blxinit
+  \blx@setsfcodes
+  \blx@bibopenparen#1\blx@bibcloseparen
+  \endgroup}
+
+\AtEveryCite{%
+  \let\parentext=\parentexttrack%
+  \let\bibopenparen=\bibopenbracket%
+  \let\bibcloseparen=\bibclosebracket}
+
+\makeatother
+
+\addbibresource{biblio.bib}
+% ---------------------------------------------- % 
+
+
+%%%%%%%%%%%% - INICIO DEL DOCUMENTO - %%%%%%%%%%%%
+
+\begin{document} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%% - PORTADA - %%%%%%%%%%%%%%%%%%
+
+% Se comienza una página nueva sin formato (sin número de página y sin encabezado/pie de página), ya que sólo incorpora la la portada:
+\newpage
+\thispagestyle{empty}
+
+% La portada se inserta mediante el comando \includepdf seguido del archivo PDF correspondiente (que se ajusta automáticamente a las dimensiones de la página):
+\includepdf{Portada_TFG.pdf}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Las páginas anteriores al contenido del TFG/TFM (previas a la introducción) suelen numerarse de forma distinta a las del cuerpo del informe, en este caso en números romanos:
+\pagenumbering{roman}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%$%%%%% - CITA - %%%%%%%%%%%%%%%%%%%%%
+ 
+% Se comienza una página nueva sin formato (sin número de página y sin encabezado/pie de página), ya que sólo incorpora la cita:
+\newpage
+\thispagestyle{empty}
+
+\begin{flushright} % Se alinea el texto en el lado derecho de la página.
+\vspace*{5cm} % Se añade un espacio vertical de 5cm para situar la cita en ~1/3 de la página.
+
+\textit{“La cita del trabajo iría aquí”} 
+
+\medskip % Salto a la línea de tamaño medio (existen \smallskip, \medskip y \bigskip)
+- El autor de la cita 
+
+\end{flushright}
+
+\afterpage{\blankpage} % Se añade una página en blanco después de la cita.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% - AGRADECIMIENTOS - %%%%%%%%%%%%%%%%
+
+% Se comienza una página nueva con formato plano (sin encabezado/pie de página pero con número de página):
+\newpage
+\thispagestyle{plain}
+
+\section*{AGRADECIMIENTOS} % Se añade un asterisco a \section para que el título no esté numerado.
+\addcontentsline{toc}{section}{AGRADECIMIENTOS} % Al utilizar \section* se ha de añadir manualmente el apartado al índice (Table Of Contents, TOC).
+
+Agradezco a \dots
+
+Gracias a \dots
+
+A \dots \ por \dots
+
+\afterpage{\blankpage} % Se añade una página en blanco después de los agradecimientos.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% - RESUMEN EJECUTIVO - %%%%%%%%%%%%%
+
+\newpage
+\section*{RESUMEN EJECUTIVO} % Se añade un asterisco a \section para que el título no esté numerado.
+\markright{RESUMEN EJECUTIVO} % Al utilizar \section* se ha de añadir manualmente el título del apartado al encabezado.
+\addcontentsline{toc}{section}{RESUMEN EJECUTIVO} % Al utilizar \section* se ha de añadir manualmente el apartado al índice (Table Of Contents, TOC).
+
+Este documento constituye una guía (que sirve a su vez de plantilla) para la elaboración de informes de TFG o TFM en \LaTeX. No pretende abarcar todas y cada una de las funcionalidades que ofrece \LaTeX \ (¡las posibilidades son prácticamente infinitas!) pero sí tratar los aspectos fundamentales para la elaboración de un documento utilizando esta indispensable herramienta. Además de los elementos básicos de cualquier informe (índice, tablas, ecuaciones, bibliografía, etc.), esta guía incluye ``tutoriales'' y plantillas para algunos de los elementos presentes en todo (o casi todo) informe de TFG o TFM (como son el diagrama de Gantt o la EDP). 
+
+\textbf{Nota:} se ha tratado de explicar con detalle la mayor parte de elementos presentes en el documento, ya sea por medio de los capítulos y apartados que lo conforman o mediante explicaciones bajo la forma de comentarios en el código \LaTeX. Es especialmente importante examinar con atención el preámbulo de dicho código, ya que en él se llevan a cabo muchas de las operaciones esenciales que dan forma al documento.
+
+% ------------------ Licencia -------------------%
+\begin{wrapfigure}{L}{0.21\textwidth}
+    \vspace{-\baselineskip}
+    \href{http://creativecommons.org/licenses/by/4.0/}{\includegraphics[width=0.22\textwidth]{cc-by.png}}
+\end{wrapfigure} 
+
+\vspace*{\fill}
+``Plantilla en LaTeX acorde con la Normativa para la elaboración de informes de TFT de la ETSII (UPM)" \ by Javier Soto Pérez-Olivares is licensed under a \href{http://creativecommons.org/licenses/by/4.0/}{Creative Commons Attribution 4.0 International License}.
+% ---------------------------------------------- % 
+
+\afterpage{\blankpage} % Se añade una página en blanco después del resumen.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%% - ÍNDICE - %%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\renewcommand*\contentsname{ÍNDICE} % Se modifica el nombre por defecto de la "Table Of Contents" (tabla de contenidos, índice) para pasar a llamarla "ÍNDICE".
+
+\tableofcontents % Se genera el índice de contenidos del documento que incorpora todos los títulos de \section, \subsection y \subsubsection (y también \paragraph, ver capítulo 1), así como los títulos añadidos con \addcontentsline (como el resumen ejecutivo, por ejemplo).
+
+\afterpage{\blankpage} % Se añade una página en blanco después del índice.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% - ÍNDICE DE TABLAS - %%%%%%%%%%%%%%
+
+\newpage
+
+\renewcommand{\listtablename}{ÍNDICE DE TABLAS} % Se define el nombre del índice de tablas.
+\listoftables % Se genera automáticamente el índice con las distintas tablas del documento (entorno \table o \longtable).
+\addcontentsline{toc}{section}{ÍNDICE DE TABLAS} % Se añade manualmente el apartado al índice (Table Of Contents, TOC).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%% - ÍNDICE DE FIGURAS - %%%%%%%%%%%%%%
+
+\newpage
+
+\renewcommand{\listfigurename}{ÍNDICE DE FIGURAS} % Se define el nombre del índice de figuras.
+\listoffigures % Se genera automáticamente el índice con las distintas figuras del documento (entorno \figure).
+\addcontentsline{toc}{section}{ÍNDICE DE FIGURAS} % Se añade manualmente el apartado al índice (Table Of Contents, TOC).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% - ÍNDICE DE CÓDIGOS - %%%%%%%%%%%%%
+
+\newpage
+
+\listofcodes % Se genera automáticamente el índice con los distintos códigos del documento (entorno \code).
+\addcontentsline{toc}{section}{ÍNDICE DE CÓDIGOS} % Se añade manualmente el apartado al índice (Table Of Contents, TOC).
+
+\afterpage{\blankpage} % Se añade una página en blanco después del índice de códigos.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Se inicia una nueva página, y se restablece la numeración de las páginas, utilizando esta vez el sistema de numeración estándar (1, 2, 3, 4, ...)
+\newpage
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%% - TÍTULOS - %%%%%%%%%%%%%%%%%%
+
+\section{TÍTULOS} \label{sec:titulos}
+
+En los documentos de clase \texttt{article} (los distintos tipos de documentos disponibles así como sus diferentes aplicaciones pueden consultarse en \url{https://en.wikibooks.org/wiki/LaTeX/Document_Structure#Document_classes}) existen por defecto tres profundidades de títulos numerados, en orden jerárquico: \texttt{\textbackslash section}, \texttt{\textbackslash subsection} y \texttt{\textbackslash subsubsection}. El título del presente capítulo es un ejemplo de título de profundidad 1 (comando \texttt{\textbackslash section}).
+
+
+\subsection{Profundidad 2}
+
+Este es un ejemplo de título de profundidad 2 (comando \texttt{\textbackslash subsection}) que, como se puede ver, queda automáticamente numerado con respecto al título jerárquicamente superior (profundidad 1) inmediatamente anterior.
+
+
+\subsubsection{Profundidad 3}
+
+Este es un ejemplo de título de profundidad 3 (comando \texttt{\textbackslash subsubsection}) que, de nuevo, se numera automáticamente con respecto al título jerárquicamente superior (profundidad 2) inmediatamente anterior.
+
+
+\paragraph{Profundidad 4}
+
+En este documento se añade una profundidad de títulos numerados adicional (mediante los comandos \texttt{\textbackslash setcounter\{secnumdepth\}\{4\}} y \texttt{\textbackslash setcounter\{tocdepth\}\{4\}}, ver preámbulo para más información). Así, el comando \texttt{\textbackslash paragraph} se utiliza para incorporar títulos de profundidad 4, como en el caso del título del presente apartado. 
+
+Si se quisiera aumentar en un grado más la profundidad de títulos, bastaría con asignar el valor 5 a ambos comandos \texttt{\textbackslash setcounter} (\texttt{\textbackslash setcounter\{secnumdepth\}\{5\}} y \texttt{\textbackslash setcounter\{tocdepth\} \{5\}}), y realizar los cambios pertinentes en el comando \texttt{\textbackslash subparagraph} de modo que su formato sea coherente con el del resto de títulos (de la misma forma que lo realizado con el comando \texttt{\textbackslash paragraph}, ver preámbulo para más información)
+
+
+\subsection{Formato y numeración}
+
+La numeración así como el formato de los títulos (tamaño de fuente, tipografía, etc.) utilizados en este documento corresponden a los valores por defecto (excepto en el caso de \texttt{\textbackslash paragraph}, como se explica más arriba), pero pueden ser modificados en el preámbulo del documento (una breve guía sobre la personalización del formato de los títulos puede consultarse en \url{https://www.overleaf.com/learn/latex/sections_and_chapters#Customize_chapters_and_sections}). 
+
+En caso de que no se quiera numerar alguno de los títulos, basta con añadir un asterísco (\textbf{*}) al comando correspondiente, como por ejemplo \texttt{\textbackslash subsection*\{Título sin numerar\}}:
+
+
+\subsection*{Título sin numerar} 
+\addcontentsline{toc}{subsection}{Título sin numerar}
+
+Los títulos sin numerar no aparecen en la tabla de contenidos (índice), pero pueden ser añadidos con ayuda del comando \texttt{\textbackslash addcontentsline\{toc\}} (utilizado previamente para los apartados de Agradecimientos y Resumen ejecutivo), que en este caso quedaría como: \texttt{\textbackslash addcontentsline\{toc\} \ \{subsection\}\{Título sin numerar\}}.
+
+
+\subsection{Referencias con el comando \texttt{\textbackslash label}} \label{sec:referencias}
+
+Los comandos \texttt{\textbackslash label} se utilizan en \LaTeX \ para colocar referencias que puedan ser utilizadas a lo largo del documento. Son especialmente útiles, como se verá más adelante, para referirse a elementos del documento como tablas, imágenes, diagramas, etc., pero también pueden ser utilizados para referirse a capítulos o secciones del informe. 
+
+Para citar una referencia basta con utilizar el comando \texttt{\textbackslash ref} en el interior del cual se indica aquello a lo que se quiere hacer referencia, como por ejemplo al primer capítulo de este documento, el capítulo \ref{sec:titulos}.
+
+\textbf{Nota:} ya que el comando \texttt{\textbackslash label} es compartido por títulos, figuras, tablas, etc., es bastante útil utilizar una nomenclatura clara para definir cada referencia, por ejemplo: ``tab:" \ seguido del nombre de la tabla para las tablas, ``fig:" \ seguido del nombre de la figura para las figuras, etc.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% - FORMATO DE TEXTO - %%%%%%%%%%%%%%
+
+\newpage
+\section{FORMATO DE TEXTO} \label{sec:formato}
+
+Como en cualquier editor de texto, el formato del texto puede alterarse sobre la marcha de distintas maneras. Pueden incluirse palabras en \textbf{negrita} (si se utiliza Overleaf puede utilizarse el atajo \texttt{ctrl+B} en Windows o \texttt{Cmd+B} en Mac), palabras en \textit{curiva} (\texttt{ctrl+I} o \texttt{Cmd+I}), o una \textit{\textbf{combinación}} de ambas.
+
+
+\subsection{Tamaño de fuente}
+
+También se puede modificar el {\huge tamaño} de forma {\footnotesize rápida} y {\Large sencilla} (una lista con los distintos tamaños y sus comandos respectivos puede encontrarse en \url{https://www.sascha-frank.com/latex-font-size.html})
+
+
+\subsection{Color}
+
+\definecolor{coral}{rgb}{1.0, 0.5, 0.31}
+
+El \textcolor{teal}{color} del \textcolor{purple}{texto} también puede ser modificado sobre la marcha, así como subrayar ciertas \colorbox{lightgray}{palabras} o \colorbox{yellow}{bloques de palabras}. Algunos colores están implementados por defecto y pueden utilizarse indicando simplemente su denominación (red, orange, blue, etc., resumidos en esta \href{https://i.stack.imgur.com/tmoHS.png}{\textcolor{blue}{imagen}}), pero también pueden definirse colores mediante sus códigos rgb, RGB, HTML, o cmyk, haciendo uso del paquete \texttt{xcolor}. Por ejemplo: \textbackslash \texttt{definecolor\{coral\}\{rgb\}\{1.0, 0.5, 0.31\}\definecolor{coral}{rgb}{1.0, 0.5, 0.31}} define un color con el correspondiente identificador rgb que se puede utilizar de ahora en adelante haciendo uso del nombre que se le ha asignado, \textcolor{coral}{coral} (una extensa guía con gran variedad de colores puede consultarse en \url{http://latexcolor.com/})
+
+
+\subsection{Espaciado}
+
+Puede ser de utilidad insertar \hspace{0.5cm} espacios \hspace{1cm} entre distintas \hspace{2cm} palabras, o espacios verticales entre párrafos u otros elementos del documento,
+
+\vspace{6cm}
+
+como en este caso.
+
+Aunque \textbackslash\texttt{hspace} y \textbackslash\texttt{vspace} presenten la ventaja de ser totalmente personalizables, para espaciados de tamaño estándar es recomendable utilizar \textbackslash \ (espacio) y \textbackslash\textbackslash \ (salto de línea).
+
+
+\subsection{Listas}
+
+Existen dos tipos de listas, las numeradas y las no numeradas.
+
+
+\subsubsection{Listas no numeradas}
+
+Las listas no numeradas corresponden al entorno \texttt{itemize}:
+
+\begin{itemize}
+    \item Primer elemento.
+    \item Segundo elemento.
+\end{itemize}
+
+Se pueden hacer listas de distintos niveles de profundidad:
+
+\begin{itemize}
+    \item Primer elemento.
+    \item Segundo elemento.
+    \begin{itemize}
+        \item Tercer elemento.
+        \begin{itemize}
+            \item Cuarto elemento.
+            \item Quinto elemento.
+        \item Sexto elemento.
+        \end{itemize}
+        \item Séptimo elemento.
+        \begin{itemize}
+            \item Octavo elemento.
+        \end{itemize}
+    \end{itemize}
+    \item Noveno elemento.
+\end{itemize}
+
+
+\subsubsection{Listas numeradas}
+
+Las listas numeradas corresponden al entorno \texttt{enumerate}:
+
+\begin{enumerate}
+    \item Primer elemento
+    \item Segundo elemento
+    \item Tercer elemento
+\end{enumerate}
+
+Del mismo modo, las listas numeradas pueden incorporar distintos niveles de profundidad:
+
+\begin{enumerate}
+    \item Primer elemento
+    \begin{enumerate}
+        \item Segundo elemento
+        \item Tercer elemento
+        \begin{enumerate}
+            \item Cuarto elemento
+            \begin{enumerate}
+                \item Quinto elemento
+                \item Sexto elemento
+            \end{enumerate}
+            \item Séptimo elemento
+        \end{enumerate}
+        \item Octavo elemento
+        \item Noveno elemento
+    \end{enumerate}
+    \item Décimo elemento.
+\end{enumerate}
+
+
+\subsubsection{Listas combinadas}
+
+Las listas numeradas y no numeradas pueden combinarse, por ejemplo:
+
+\begin{itemize}
+    \item Primer elemento.
+    \begin{enumerate}
+        \item Segundo elemento
+        \item Tercer elemento
+        \begin{itemize}
+            \item Cuarto elemento
+            \item Quinto elemento
+            \begin{enumerate}
+                \item Sexto elemento
+                \item Séptimo elemento
+            \end{enumerate}
+            \item Octavo elemento
+        \end{itemize}
+        \item Noveno elemento
+    \end{enumerate}
+    \item Décimo elemento
+\end{itemize}
+
+
+\subsubsection{Formato de las listas}
+
+Tanto el estilo de las distintas numeraciones dentro de una lista numerada como la apariencia de los \textit{bullet points} de las listas no numeradas pueden personalizarse:
+
+\renewcommand{\labelenumi}{\Roman{enumi}} % Primera profundidad de la lista numerada: números romanos (\Roman)
+\renewcommand{\labelenumii}{\Alph{enumii}} % Segunda profundidad de la lista numerada: letras en mayúsculas (\Alph)
+\renewcommand{\labelitemi}{\textbullet} % Primera profundidad de la lista no numerada: puntos (\textbullet).
+\renewcommand{\labelitemii}{\textasteriskcentered} % Segunda profundidad de la lista no numerada: asteriscos (\textasteriskcentered) 
+
+\begin{itemize}
+    \item Primer elemento.
+    \begin{enumerate}
+        \item Segundo elemento
+        \item Tercer elemento
+        \begin{itemize}
+            \item Cuarto elemento
+            \item Quinto elemento
+            \begin{enumerate}
+                \item Sexto elemento
+                \item Séptimo elemento
+            \end{enumerate}
+            \item Octavo elemento
+        \end{itemize}
+        \item Noveno elemento
+    \end{enumerate}
+    \item Décimo elemento
+\end{itemize}
+
+Los distintos formatos posibles pueden consultarse en la guía elaborada por Overleaf que puede encontrarse en \url{https://www.overleaf.com/learn/latex/lists}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%% - TABLAS - %%%%%%%%%%%%%%%%%%%
+
+\newpage
+\section{TABLAS} \label{sec:tablas}
+
+Las tablas se definen en el entorno \texttt{table}. Existen infinidad de posibilidades en cuanto a su formato: omitir o dibujar líneas horizontales y verticales, fusionar columnas y filas, alinear el contenido a la derecha, izquierda o centro, y demás opciones resumidas en \url{https://www.overleaf.com/learn/latex/tables}. Dado que la forma de construir una tabla directamente en código \LaTeX \ está lejos de ser cómoda e intuitiva, quizás lo más recomendable sea acudir a editores de tablas que generan automáticamente el código correspondiente y cuya interfaz es similar a la que puede encontrarse en Excel, como por ejemplo \url{https://www.tablesgenerator.com/}. Un ejemplo sencillo de tabla se muestra a continuación:
+
+\vspace{25pt}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|c|l|}
+\hline
+$\bm{n}$ & $\bm{a_n}$ & $\bm{a_{n+1}}$ & $\bm{\varphi} \ _{(= a_{n+1}/a_n)}$ \\ \hline\hline
+\textbf{1} & 1 & 1 & 1 \\ \hline
+\textbf{2} & 1 & 2 & 2 \\ \hline
+\textbf{3} & 2 & 3 & 1,5 \\ \hline
+\textbf{4} & 3 & 5 & 1,66666667 \\ \hline
+\textbf{5} & 5 & 8 & 1,6 \\ \hline
+\textbf{6} & 8 & 13 & 1,625 \\ \hline
+\textbf{7} & 13 & 21 & 1,61538462 \\ \hline
+\textbf{8} & 21 & 34 & 1,61904762 \\ \hline
+\textbf{9} & 34 & 55 & 1,61764706 \\ \hline
+\textbf{10} & 55 & - & - \\ \hline
+\end{tabular}
+\caption{Cinco primeros términos de la sucesión de Fibonacci}
+\label{tabla:fibonacci5}
+\end{table}
+
+\vspace{5pt}
+
+El título de la tabla se indica mediante el comando \textbackslash\texttt{caption} (este comando no solamente sirve para añadir un título a la tabla, sino que es esencial para que ésta aparezca en el índice de tablas), y, al igual que en el caso de los títulos de capítulos (ver apartado \ref{sec:referencias}), es muy recomendable añadir el comando \textbackslash\texttt{label} para poder referirse a la tabla en cuestión en partes posteriores (o anteriores) del documento.
+
+
+\subsection{Posicionamiento}
+
+Las tablas (al igual que otros elementos como imágenes o diagramas, como se verá más adelante) pueden posicionarse en distintos lugares de la página y en distintas posiciones con respecto al texto. La forma más común de situar una tabla es inmediatamente después de un párrafo y centrada en la página (como en el caso de la tabla \ref{tabla:fibonacci5}), lo que se consigue indicando \texttt{[H]} al iniciar el entorno \texttt{table} y añadiendo el comando \textbackslash\texttt{centering}, respectivamente. Una guía que recopila las distintas opciones en lo que se refiere al posicionamiento de tablas e imágenes puede consultarse en \url{https://www.overleaf.com/learn/latex/positioning_images_and_tables}.
+
+
+\newpage
+\subsection{Entorno \textbackslash\texttt{longtable}}
+
+En el caso de que una tabla sea demasiado larga como para caber en una única página se puede utilizar el entorno \texttt{longtable}, mediante el cual \LaTeX \ secciona la tabla de forma automática en tantas partes como sea necesario.
+
+\vspace{10pt}
+
+\begin{longtable}[H]{|c|c|c|l|}
+\hline
+$\bm{n}$ & $\bm{a_n}$ & $\bm{a_{n+1}}$ & $\bm{\varphi} \ _{(= a_{n+1}/a_n)}$ \\ \hline\hline
+\endhead
+\textbf{1} & 1 & 1 & 1 \\ \hline
+\textbf{2} & 1 & 2 & 2 \\ \hline
+\textbf{3} & 2 & 3 & 1,5 \\ \hline
+\textbf{4} & 3 & 5 & 1,66666667 \\ \hline
+\textbf{5} & 5 & 8 & 1,6 \\ \hline
+\textbf{6} & 8 & 13 & 1,625 \\ \hline
+\textbf{7} & 13 & 21 & 1,61538462 \\ \hline
+\textbf{8} & 21 & 34 & 1,61904762 \\ \hline
+\textbf{9} & 34 & 55 & 1,61764706 \\ \hline
+\textbf{10} & 55 & 89 & 1,61818182 \\ \hline
+\textbf{11} & 89 & 144 & 1,61797753 \\ \hline
+\textbf{12} & 144 & 233 & 1,61805556 \\ \hline
+\textbf{13} & 233 & 377 & 1,61802575 \\ \hline
+\textbf{14} & 377 & 610 & 1,61803714 \\ \hline
+\textbf{15} & 610 & 987 & 1,61803279 \\ \hline
+\textbf{16} & 987 & 1597 & 1,61803445 \\ \hline
+\textbf{17} & 1597 & 2584 & 1,61803381 \\ \hline
+\textbf{18} & 2584 & 4181 & 1,61803406 \\ \hline
+\textbf{19} & 4181 & 6765 & 1,61803396 \\ \hline
+\textbf{20} & 6765 & 10946 & 1,618034 \\ \hline
+\textbf{21} & 10946 & 17711 & 1,61803399 \\ \hline
+\textbf{22} & 17711 & 28657 & 1,61803399 \\ \hline
+\textbf{23} & 28657 & 46368 & 1,61803399 \\ \hline
+\textbf{24} & 46368 & 75025 & 1,61803399 \\ \hline
+\textbf{25} & 75025 & 121393 & 1,61803399 \\ \hline
+\textbf{26} & 121393 & 196418 & 1,61803399 \\ \hline
+\textbf{27} & 196418 & 317811 & 1,61803399 \\ \hline
+\textbf{28} & 317811 & 514229 & 1,61803399 \\ \hline
+\textbf{29} & 514229 & 832040 & 1,61803399 \\ \hline
+\textbf{30} & 832040 & 1346269 & 1,61803399 \\ \hline
+\textbf{31} & 1346269 & 2178309 & 1,61803399 \\ \hline
+\textbf{32} & 2178309 & 3524578 & 1,61803399 \\ \hline
+\textbf{33} & 3524578 & 5702887 & 1,61803399 \\ \hline
+\textbf{34} & 5702887 & 9227465 & 1,61803399 \\ \hline
+\textbf{35} & 9227465 & 14930352 & 1,61803399 \\ \hline
+\textbf{36} & 14930352 & 24157817 & 1,61803399 \\ \hline
+\textbf{37} & 24157817 & 39088169 & 1,61803399 \\ \hline
+\textbf{38} & 39088169 & 63245986 & 1,61803399 \\ \hline
+\textbf{39} & 63245986 & 102334155 & 1,61803399 \\ \hline
+\textbf{40} & 102334155 & 165580141 & 1,61803399 \\ \hline
+\textbf{41} & 165580141 & 267914296 & 1,61803399 \\ \hline
+\textbf{42} & 267914296 & 433494437 & 1,61803399 \\ \hline
+\textbf{43} & 433494437 & 701408733 & 1,61803399 \\ \hline
+\textbf{44} & 701408733 & 1134903170 & 1,61803399 \\ \hline
+\textbf{45} & 1134903170 & 1836311903 & 1,61803399 \\ \hline
+\textbf{46} & 1836311903 & 2971215073 & 1,61803399 \\ \hline
+\textbf{47} & 2971215073 & 4807526976 & 1,61803399 \\ \hline
+\textbf{48} & 4807526976 & 7778742049 & 1,61803399 \\ \hline
+\textbf{49} & 7778742049 & 1,2586E+10 & 1,61803399 \\ \hline
+\textbf{50} & 1,2586E+10 & - & - \\ \hline
+\caption{Cincuenta primeros términos de la sucesión de Fibonacci}
+\label{tabla:fibonacci50}
+\end{longtable}
+
+Existen distintas alternativas en cuanto a qué elementos incluir tanto en la primera como en la última línea de cada sección de tabla (en el caso de la tabla \ref{tabla:fibonacci50} se ha elegido repetir la primera línea en cada una de sus secciones), que pueden consultarse en \url{https://texblog.org/2011/05/15/multi-page-tables-using-longtable/}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%% - IMÁGENES - %%%%%%%%%%%%%%%%%%
+
+\newpage
+\section{IMÁGENES} \label{sec:imagenes}
+
+Las imágenes se insertan mediante el comando \textbackslash\texttt{includegraphics} que es conveniente situar en el entorno \texttt{figure} (mismo entorno utilizado, como se verá más adelante, para gráficas o diagramas). Un ejemplo de imagen se muestra a continuación (al utilizar Overleaf es esencial cargar la imagen en el directorio de trabajo antes de insertarla en el documento): 
+
+\vspace{10pt}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.5]{21MogaleSuperScooper.jpg}
+    \caption{Vista de perfil del 21" \ Mogale Super Scooper}
+    \label{fig:logoETSII}
+\end{figure}
+
+En la inmensa mayoría de casos el tamaño original de la imagen no se adapta correctamente a las dimensiones de la página, por lo que es necesario redimensionar la imagen mediante el argumento \texttt{scale} de \textbackslash\texttt{includegraphics}. 
+
+Al igual que para las tablas, existen distintas alternativas en cuanto a su posicionamiento (que, se recuerda, pueden consultarse en \url{https://www.overleaf.com/learn/latex/positioning_images_and_tables}), el título se indica mediante el comando \textbackslash\texttt{caption} y la referencia mediante el comando \textbackslash\texttt{label}. 
+
+Existen, además, diversas opciones en lo relativo al manejo de imágenes que no se detallan en este documento, pero que pueden consultarse en \url{https://es.overleaf.com/learn/latex/Inserting_Images} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%% - ECUACIONES - %%%%%%%%%%%%%%%%%
+
+\newpage
+\section{ECUACIONES} \label{sec:ecuaciones}
+
+Una de las mayores ventajas de \LaTeX \ es lo fácil y rápido que resulta incorporar ecuaciones en el documento. Las ecuaciones se definen en el entorno \texttt{equation}, mediante el cual la identidad de Euler, por ejemplo, quedaría como:
+
+\begin{equation}
+    e^{i\pi} + 1 = 0
+    \label{eq:euler}
+\end{equation}
+
+o la serie de Leibniz:
+
+\begin{equation}
+    \sum_{n=0}^\infty \frac{(-1)^n}{2n+1} = \frac{\pi}{4}
+    \label{eq:leibniz}
+\end{equation}
+
+Como se puede ver, las ecuaciones se numeran de forma automática con respecto al capítulo en el que se encuentran (para no numerar una ecuación basta con definir el entorno como \textbackslash\texttt{begin\{equation*\}}), número al que se puede hacer referencia definiendo el comando \textbackslash\texttt{label}.
+
+En este apartado se utilizan algunos de los símbolos matemáticos básicos, para más información sobre los distintos comandos que corresponden a diversos símbolos puede consultarse \url{https://www.caam.rice.edu/~heinken/latex/symbols.pdf}.
+
+
+\subsection{Ecuaciones en el texto}
+
+También existe la posibilidad de introducir expresiones matemáticas en una línea de texto encerrando la expresión entre dos símbolos \$, mediante lo cual se puede hacer referencia al número complejo $i$, que puede definirse como $\sqrt{-1}=i$, sin necesidad de interrumpir la oración.
+
+
+\subsection{Entorno \textbackslash\texttt{split}}
+
+En el caso de que una ecuación sea demasiado larga como para caber en una única línea puede usarse el entorno \texttt{split}, utilizado para el desarrollo de la serie de Taylor de $\sin{x}$ que aparece a continuación:
+
+\begin{equation}
+\begin{split}
+    \sin{x} = \ & x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \frac{x^9}{9!} - \frac{x^{11}}{11!} + \frac{x^13}{13!} + \dots \\ & + (-1)^n \frac{x^{2n+1}}{(2n+1)!} + \dots \qquad , \forall x \in \mathbb{R}
+    \label{eq:taylor}
+\end{split}
+\end{equation}
+
+La disposición de la ecuación no se hace automáticamente, por lo que es necesario indicar en qué lugar quedan verticalmente alineadas las distintas líneas (esto se realiza mediante el símbolo \& que en este caso va colocado después del $=$ en la primera línea y antes del primer $+$ de la segunda línea) y en qué momento se salta a la línea (que se indica mediante el comando \textbackslash\textbackslash).
+
+
+\subsection{La herramienta Mathpix}
+
+Mathpix es una aplicación que permite traducir a lenguaje \LaTeX \ cualquier ecuación, ya se encuentre en un archivo PDF o escrita a mano en un folio de papel. Aunque el proceso de plasmar ecuaciones en un documento \LaTeX \ ya es sencillo y rápido, esta herramienta lo vuelve casi instantáneo. La aplicación puede descargarse desde la página web de Mathpix: \url{https://mathpix.com/}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%% - GRÁFICAS - %%%%%%%%%%%%%%%%%%
+
+\newpage
+\section{GRÁFICAS} \label{sec:graficas}
+
+Existen principalmente dos formas de insertar gráficas en un documento \LaTeX: mediante un archivo \textit{.pgf} generado por un programa externo (mediante Python utilizando la librería matplotlib, por ejemplo), o haciendo uso del paquete TikZ.
+
+
+\subsection{Gráficas PGF}
+
+Insertar gráficas en formato PGF es muy sencillo, el procedimiento es esencialmente el mismo que al insertar una imagen (entorno \texttt{figure}), pero sustituyendo \textbackslash\texttt{includegraphics} por \textbackslash\texttt{input}, seguido del archivo \textit{.pgf} correspondiente. En este caso las dimensiones de la gráfica se ajustan mediante el comando \textbackslash\texttt{scalebox}. 
+
+\begin{figure}[H]
+    \centering
+    \scalebox{1.1}{\input{SquareWave.pgf}}
+    \caption{Onda cuadrada construida mediante síntesis aditiva a partir de sus ocho primeros armónicos}
+    \label{fig:ondacuadrada}
+\end{figure}
+
+
+\subsection{Gráficas TikZ} \label{sec:graficastikz}
+
+También existe la posibilidad de insertar gráficas haciendo uso del paquete TikZ, aunque en este caso la gráfica se construye a mano en el propio código \LaTeX \ del documento, por lo que es preferible utilizar herramientas que generen gráficas que puedan exportarse a \textit{.pgf} en caso de que éstas sean complicadas. Para gráficas sencillas el paquete TikZ se adapta adecuadamente, como puede verse en el siguiente ejemplo:
+
+\vspace{5pt}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+
+% Eje de abscisas (se indica en primer lugar que la línea es gruesa y acaba en forma de flecha (thick,->), seguido de las coordenadas entre las cuales circula el eje, y por último la posición del texto con respecto al eje (right)):
+\draw[thick,->] (-1,0) -- (14,0) node[right] {\textbf{t}}; 
+
+% Eje de ordenadas (se indica en primer lugar que la línea es gruesa y acaba en forma de flecha (thick,->), seguido de las coordenadas entre las cuales circula el eje, y por último la posición del texto con respecto al eje (above)).
+\draw[thick,->] (0,-3) -- (0,3) node[above] {\textbf{Amplitud}}; 
+
+% Se dibujan líneas gruesas (very thick) de color rojo (color=red) entre las coordenadas indicadas:
+\draw[very thick, color=red] (-1,-2) -- (1,2); 
+\draw[very thick, color=red] (1,2) -- (3,-2);
+\draw[very thick, color=red] (3,-2) -- (5,2);
+\draw[very thick, color=red] (5,2) -- (7,-2);
+\draw[very thick, color=red] (7,-2) -- (9,2);
+\draw[very thick, color=red] (9,2) -- (11,-2);
+\draw[very thick, color=red] (11,-2) -- (13,2);
+
+% Se dibujan líneas punteadas (dotted) de color gris (color=gray) entre las coordenadas indicadas:
+\draw[dotted, thick, color=gray] (-1,2) -- (14,2);
+\draw[dotted, thick, color=gray] (-1,-2) -- (14,-2);
+
+% Se dibujan dos marcas en el eje de ordenadas (posiciones 2 y -2) indicando su valor (colocado en la parte superior izquierda de la primera marca (above left), e inferior izquierda de la segunda marca (below left)):
+\draw (3pt,2) -- (-3pt, 2) node[above left] {2};
+\draw (3pt,-2) -- (-3pt, -2) node[below left] {-2};
+
+% Se dibujan marcas en el eje de abscisas (posiciones 1, 3, 57, 9 y 11) indicando su valor (colocado en la parte inferior (below) de cada marca):
+\draw (1,3pt) -- (1, -3pt) node[below] {1};
+\draw (3,3pt) -- (3, -3pt) node[below] {3};
+\draw (5,3pt) -- (5, -3pt) node[below] {5};
+\draw (7,3pt) -- (7, -3pt) node[below] {7};
+\draw (9,3pt) -- (9, -3pt) node[below] {9};
+\draw (11,3pt) -- (11, -3pt) node[below] {11};
+\draw (13,3pt) -- (13, -3pt) node[below] {13};
+
+\end{tikzpicture}
+\caption{Onda triangular}
+\end{figure}
+
+El lenguaje que utiliza TikZ es de alto nivel, por lo que es fácilmente interpretable. Aún así, el código que genera la gráfica anterior está comentado para facilitar al lector la labor de identificar el propósito de cada parámetro y comando. TikZ también permite realizar todo tipo de diagramas, que se detallan en el capítulo \ref{sec:diagramas}.
+
+
+\subsection{Geogebra}
+
+Por último, es interesante destacar una alternativa considerablemente útil para construir gráficas de mayor complejidad mediante TikZ, Geogebra. Esta herramienta gratuita permite construir gráficas de forma intuitiva y exportarlas en código TikZ. El archivo \textit{.txt} que provee contiene dicho código que puede a continuación añadirse (copiando y pegando) al documento. Sólo la versión de escritorio de Geogebra permite exportar en formato TikZ, el enlace de descarga es el siguiente: \url{https://www.geogebra.org/download} (descargar GeoGebra Clásico 6).
+
+\vspace{6pt}
+
+\definecolor{ccqqqq}{rgb}{0.8,0,0}
+\definecolor{cqcqcq}{rgb}{0.7529411764705882,0.7529411764705882,0.7529411764705882}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[line cap=round, line join=round, >=triangle 45, x=1cm, y=1cm, scale=0.9]
+\begin{axis}[
+x=1.2cm,y=1.2cm,
+axis lines=middle,
+ymajorgrids=true,
+xmajorgrids=true,
+xmin=-2.105414402085544,
+xmax=10.039818974753087,
+ymin=-3.860741852964219,
+ymax=3.2,
+xtick={-2,-1,...,10},
+ytick={-4,-3,...,3},
+xlabel=t,
+ylabel=Amplitud,
+legend style={font=\small},
+legend cell align=left,
+legend pos=south east]]
+\clip(-2.105414402085544,-4.860741852964219) rectangle (10.039818974753087,3.997857079511652);
+\draw[line width=0.8pt,color=cqcqcq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{0-(4/3.141592653589793)*sin((3.141592653589793*(\x))*180/pi)});
+\draw[line width=0.8pt,color=cqcqcq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{4/(2*3.141592653589793)*sin((2*3.141592653589793*(\x))*180/pi)});
+\draw[line width=0.8pt,color=cqcqcq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{0-(4/(3*3.141592653589793))*sin((3*3.141592653589793*(\x))*180/pi)});
+\draw[line width=0.8pt,color=cqcqcq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{4/(4*3.141592653589793)*sin((4*3.141592653589793*(\x))*180/pi)});
+\draw[line width=0.8pt,color=cqcqcq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{0-(4/(5*3.141592653589793))*sin((5*3.141592653589793*(\x))*180/pi)});
+\draw[line width=0.8pt,color=cqcqcq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{4/(6*3.141592653589793)*sin((6*3.141592653589793*(\x))*180/pi)});
+\draw[line width=0.8pt,color=cqcqcq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{0-(4/(7*3.141592653589793))*sin((7*3.141592653589793*(\x))*180/pi)});
+\draw[line width=0.8pt,color=cqcqcq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{4/(8*3.141592653589793)*sin((8*3.141592653589793*(\x))*180/pi)});
+\draw[line width=0.8pt,color=ccqqqq,smooth,samples=100,domain=-2.105414402085544:10.039818974753087] plot(\x,{0-(-(4/3.141592653589793)*sin((3.141592653589793*(\x))*180/pi)+4/(2*3.141592653589793)*sin((2*3.141592653589793*(\x))*180/pi)-(4/(3*3.141592653589793))*sin((3*3.141592653589793*(\x))*180/pi)+4/(4*3.141592653589793)*sin((4*3.141592653589793*(\x))*180/pi)-(4/(5*3.141592653589793))*sin((5*3.141592653589793*(\x))*180/pi)+4/(6*3.141592653589793)*sin((6*3.141592653589793*(\x))*180/pi)-(4/(7*3.141592653589793))*sin((7*3.141592653589793*(\x))*180/pi)+4/(8*3.141592653589793)*sin((8*3.141592653589793*(\x))*180/pi))});
+\begin{scriptsize}
+\addlegendimage{no markers, color=cqcqcq}
+\addlegendentry{\ Ondas sinusoidales}
+\addlegendimage{no markers, color=ccqqqq}
+\addlegendentry{\ Onda de sierra resultante}
+\end{scriptsize}
+\end{axis}
+\end{tikzpicture}
+\caption{Onda de sierra construida mediante síntesis aditiva a partir de sus ocho primeros armónicos}
+\label{fig:sawtooth}
+\end{figure}
+
+El código que se extrae del archivo \textit{.txt} mencionado no se adapta en la mayoría de casos al tamaño y formato del documento, por lo que es necesario actuar sobre algunos de los parámetros que en él se pueden encontrar. Así, no es recomendable utilizar Geogebra como fuente de código TikZ si no se tiene experiencia previa trabajado con dicha librería. 
+
+Además, es importante señalar que es habitual encontrar diferencias entre lo que muestra Geogebra y el código TikZ generado (como en el caso de la figura \ref{fig:sawtooth}, en el que no todos los dientes de sierra son idénticos, aunque así lo muestre Geogebra), por lo que se aconseja limitar el uso de esta herramienta a aquellos casos en los que no se disponga de los conocimientos o recursos necesarios para construir archivos \textit{.pgf} a partir de otras fuentes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%% - DIAGRAMAS - %%%%%%%%%%%%%%%%%%
+
+\newpage
+\section{DIAGRAMAS CON TIKZ} \label{sec:diagramas}
+
+La herramienta básica para construir diagramas en \LaTeX \ es TikZ (además de ser útil a la hora de generar gráficas sencillas, como se vio en el apartado \ref{sec:graficastikz}). En este apartado se presentan en primer lugar dos ejemplos sencillos de diagramas elaborados con dicha librería, con el objetivo de informar al lector de las herramientas básicas que ofrece TikZ, y en segundo lugar una plantilla para la elaboración de una EDP (Estructura de Descomposición del Proyecto), diagrama esencial en un informe de TFG/TFM.
+
+
+\subsection{Dos ejemplos sencillos}
+
+A continuación se presentan dos diagramas sencillos, un diagrama de bloques (orientado en este caso al mapeo de las conexiones en un sistema de sonido, pero cuyos elementos - distintos tipos de cajas, flechas, etc. - pueden ser utilizados en cualquier disciplina) y un diagrama de un circuito eléctrico. 
+
+El paquete TikZ es extraordinariamente versátil, por lo que, además de los dos ejemplos citados, permite construir casi cualquier tipo de diagrama. En el siguiente enlace se pueden encontrar plantillas para una gran variedad de diagramas elaborados con TikZ: \url{https://texample.net/tikz/examples/tag/diagrams/}.
+
+
+\subsubsection{Diagrama de bloques}
+
+Como se ha comentado en el apartado \ref{sec:graficastikz}, el lenguaje utilizado para construir un diagrama TikZ es fácilmente interpretable. Aún así, el código que genera el siguiente diagrama de bloques está comentado, para así facilitar al lector la labor de identificar el propósito de cada parámetro y comando.
+
+% Se definen en primer lugar distintos estilos de cajas que serán utilizados más adelante. La forma de definir un estilo es la siguiente:
+% \tikzstyle{nombre del estilo} = [características del estilo] 
+% siendo el nombre del estilo de libre elección y algunas de las características las siguientes:
+% - thick: para bordes de caja gruesos.
+% - rectangle: para forma rectangular de caja.
+% - rounded corners: para bordes redondeados.
+% - minimum height/width: el tamaño de la caja se adapta al texto que haya en su interior, pero pueden definirse valores mínimos de anchura y longitud para la caja.
+% - text cetered: para centrar el texto en la caja.
+% - text width: anchura del texto.
+% - draw: color de los bordes de la caja.
+% - fill: color del interior de la caja.
+\tikzstyle{fuente} = [thick, rectangle, minimum width=2cm, minimum height=3cm, text centered, draw=black, text width=2cm, fill=teal!20] 
+\tikzstyle{modulo} = [thick, rectangle, rounded corners, minimum width=2cm, minimum height=1cm, text centered, draw=black, text width=2cm, fill=coral!20]
+\tikzstyle{ampli} = [thick, rectangle, rounded corners, minimum width=2.2cm, minimum height=1cm, text centered, draw=black, text width=2.2cm, fill=olive!20]
+
+% Se define el entorno (figure), se centra el diagrama en la página (\centering) y se inicia el diagrama (\begin{tikzpicture}) con un valor predeterminado de distancia entre cajas de 2cm:
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2cm]
+
+    % Se crean las distintas cajas del diagrama. La forma de definir una caja es la siguiente:
+    % \node[características de la caja] (nombre de la caja) {texto en el interior de la caja}; 
+    % siendo el nombre de libre elección (usado para referirse a una caja en concreto a lo largo del código del diagrama) y algunas de las características las siguientes:
+    % - estilo: para utilizar como estilo de caja alguno de los definidos anteriormente.
+    % - posición con respecto a otra caja: a la derecha de (right of), a la izquierda de (left of), debajo de (below of) y encima de (above of).
+    % - xshift e yshift: desplazamiento en ambos ejes de la caja con respecto a su posición por defecto.
+    % - demás características de una caja (las mismas que ya se han mencionado al definir los estilos de las cajas)
+    \node [fuente] (Fuente) {Fuente de sonido \\ -------- \\ Tocadiscos, CDs, MP3, etc.};
+    \node [modulo,right of=Fuente, xshift=1.2cm] (Mesa) {Mesa de mezclas / Pre-amplificador};
+    \node [modulo,right of=Mesa, xshift=1.5cm] (XO) {Crossover activo};
+    \node [modulo,above of=XO, yshift=0.1cm] (EQ) {Ecualizador};
+    \node [ampli,right of=XO, xshift=1.7cm, yshift=+2.4cm] (Amp1) {Amplificador de agudos};
+    \node [ampli,right of=XO, xshift=1.7cm, yshift=+0.8cm] (Amp2) {Amplificador de medios};
+    \node [ampli,right of=XO, xshift=1.7cm, yshift=-0.8cm] (Amp3) {Amplificador de bajos};
+    \node [ampli,right of=XO, xshift=1.7cm, yshift=-2.4cm] (Amp4) {Amplificador de subbajos};
+    \node [right of=Amp1, xshift=1.2cm, text centered, text width=1.5cm] (Tweeter) {{\huge\faVolumeUp} \\ Tweeter};
+    \node [right of=Amp2, xshift=1.2cm, text centered, text width=1.5cm] (Midrange) {{\huge\faVolumeUp} \\ Midrange \\ driver};
+    \node [right of=Amp3, xshift=1.2cm, text centered, text width=1.8cm] (Woofer) {{\huge\faVolumeUp} Woofer};
+    \node [right of=Amp4, xshift=1.2cm, text centered, text width=1.8cm] (Subwoofer) {{\huge\faVolumeUp} Subwoofer};
+    
+    % Se crean los arcos que conectan unas cajas con otras. La forma de definir una flecha es la siguiente:
+    % \draw[características del arco] (caja de salida) -- (caja de entrada);
+    % siendo algunas de las características de un arco las siguientes:
+    % - thick: para dibujar un arco grueso.
+    % - dotted: par dibujar un arco punteado.
+    % - ->: para que el arco termine con punta de flecha.
+    % - >=stealth: uno de los formatos de flecha.
+    \draw [thick,->,>=stealth] (Fuente) -- (Mesa);
+    \draw [thick,->,>=stealth] (Mesa) -- (XO);
+    \draw [thick,->,>=stealth] (XO.east) -- (Amp1.west); % Se añade la posición (indicando la dirección cardinal) desde la que se quiere que el arco parta de la caja de salida y/o llegue a la caja de entrada.
+    \draw [thick,->,>=stealth] (XO.east) -- (Amp2.west);
+    \draw [thick,->,>=stealth] (XO.east) -- (Amp3.west);
+    \draw [thick,->,>=stealth] (XO.east) -- (Amp4.west);
+    \draw [thick,->,>=stealth] (Amp1) -- (Tweeter);
+    \draw [thick,->,>=stealth] (Amp2) -- (Midrange);
+    \draw [thick,->,>=stealth] (Amp3) -- (Woofer); 
+    \draw [thick,->,>=stealth] (Amp4) -- (Subwoofer); 
+    \draw [dotted,->,>=stealth] (Mesa) |- (EQ) node [pos=0.73, above] {\footnotesize \textcolor{gray}{opcional}}; % Se utiliza "|-" en lugar de "--" para indicar que se quiere que el arco presente un codo. También se coloca un texto adherido al arco mediante el comando "node[posición del texto (en tanto por uno de la longitud del arco), above o below (por encima o por debajo del arco)] {texto que se quiera adherir al arco}".
+    \draw [dotted,->,>=stealth] (EQ) -- (XO.north);
+    
+\end{tikzpicture}
+\vspace{5pt}
+\caption{Elementos y conexiones de un sistema de sonido de 4 vías}
+\label{fig:diagramabloques}
+\end{figure}
+
+\textbf{Nota:} en el anterior diagrama se utilizan iconos propios del paquete \texttt{fontawesome5}. Una extensa guía con los distintos iconos disponibles así como sus códigos asociados puede consultarse en \url{http://mirrors.ibiblio.org/CTAN/fonts/fontawesome5/doc/fontawesome5.pdf}.
+
+
+\subsubsection{Circuito eléctrico}
+
+TikZ no sólo está diseñado para la construcción de diagramas de flujo o de bloques, sino también de diagramas específicos de casi cualquier disciplina científica, como circuitos eléctricos:
+
+\vspace{5pt}
+
+% El código de este diagrama no está comentado, para más información puede consultarse una breve guía sobre los diagramas "circuittikz" en https://es.overleaf.com/learn/latex/CircuiTikz_package
+\begin{figure}[H]
+\centering
+\begin{circuitikz}
+\draw
+(0,21) node[above]{$V_S=18 V$} 
+(3,16) node[right]{Output} 
+(0,21) to[R, l=\mbox{$R_1=1k\Omega$}, o-] (0,19)
+(0,19) to[vR, l=\mbox{$R_2=10k\Omega$}, -] (0,17) -- (0,16)
+(0,16) to[R, l=\mbox{$R_3=100k\Omega$}, *-o] (3,16)
+(0,12) -- (-2,12) to[pC, l^=\mbox{$C_1=10\mu F$}, -] (-2,16) -- (0,16)
+(0,16) to [Tnpn,n=npn1] (0,14) (npn1.C) node[anchor= west]{$Q_1 = 2n3904$}
+(0,14) to[full led, -*] (0,12)
+(0,12) node[ground]{}
+;
+\end{circuitikz}
+\vspace{5pt}
+\caption{``Simplest DIY Audio Oscillator", un oscilador extremadamente sencillo diseñado por LOOK MUM NO COMPUTER}
+\label{fig:simplestosc}
+\end{figure}
+
+
+\subsection{Plantilla de EDP}
+
+Una Estructura de Descomposición del Proyecto suele ser considerablemente grande, por lo que se opta por colocarla en una página aparte y en formato apaisado (esto se consigue situando el diagrama en el entorno \texttt{landscape} al que se le puede añadir el comando \textbackslash\texttt{newgeometry} para ajustar las dimensiones de página horizontal). Al igual que los diagramas anteriores, el código está comentado de forma que el lector conozca los parámetros y comandos básicos y pueda así modificar el diagrama para adaptarlo a sus necesidades.
+
+% Se comienza una página nueva sin formato (sin número de página y sin encabezado/pie de página):
+\newpage
+\thispagestyle{empty}
+
+% Se modifica la geometría (los márgenes) de la página y se coloca en formato horizontal:
+\newgeometry{top=10mm, bottom=10mm, left=12mm, right=12mm}
+\begin{landscape}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[scale=0.9, % Escala del diagrama.
+every node/.style = {draw, rounded corners=3pt, semithick, drop shadow, font=\small}, % Estilo (formato) de los distintos nodos (bloques). Los distintos parámetros o características de estos nodos siguen la línea de los visto en el diagrama de bloques de la figura 7.1.
+ROOT/.style = {color=gray!70, text width = 14.5cm, inner sep=2mm, text=white, font=\bfseries, text centered}, % Estilo del bloque "padre" (el título del proyecto). 
+L1/.style = {fill=white, text width = 3.5cm}, % Se define el estilo de los nodos de de profundidad 1 (al que se ha llamado "L1").
+L2/.style = {fill=white, text width = 3cm,
+            grow=down, xshift=1em, anchor=west, edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}}, % Se define el estilo de los nodos de de profundidad 2 (al que se ha llamado "L2"), que se utiliza, como se verá más adelante, tanto en los nodos de profundidad 2 (1.1 ..., 1.2 ..., etc.) como aquéllos de profundidad 3 (1.3-1 ..., 1.3-2 ... , etc.). También se indica (bajo el argumento "edge from parent path" el tipo de arco que relaciona un nodo "padre" con un nodo "hijo" (en este caso el arco parte de la parte inferior del nodo padre (south) para llegar a la parte izquierda del nodo hijo (west)). 
+edge from parent/.style = {draw, thick}, % Se define el estilo del arco que relaciona un nodo "padre" con un nodo "hijo".
+LD/.style = {level distance=#1ex}, % Se define la unidad utilizada para indicar la distancia entre distintos nodos.
+level 1/.style = {sibling distance=90mm} % Se define la distancia horizontal entre nodos de profundidad 1.
+]
+    
+% La estructura del código que genera la EDP es la siguiente:
+
+% nodo padre
+%   nodo hijo {
+%       nodo hijo {}
+%       nodo hijo {}
+%       nodo hijo {}
+%       }
+%   nodo hijo {}
+%   nodo hijo {}
+
+% Nótese que la indentación no es lo que indica si un nodo es el "hijo" o no de otro, sino el uso de los corchetes. En este caso el diagrama obtenido tendría la siguiente estructura:
+
+%           Título del proyecto
+%   -------------------------------------
+%   |                |                  |
+% Nodo 1           Nodo 2             Nodo 3
+%   |
+%   -- Nodo 1.1
+%   |
+%   -- Nodo 1.2
+%   |
+%   -- Nodo 1.3
+
+% Excepto en el caso del título del proyecto, que se define simplemente como "\node[ROOT] {Título}", la definición del resto de nodos sigue la siguiente estructura:
+
+% child[
+% tipo de nodo (para indicar si el arco que lo conecta es estándar o como el definido en "L2/.style") - ejemplo: L2,
+% distancia de este nodo "hijo" a su nodo "padre" - ejemplo: LD=10
+% ]
+% {node[
+% estilo del nodo (para ello se utilizan los estilos definidos anteriormente (L1, L2) al que se le puede sumar o modificar algún parámetro) - ejemplo: L2, text width=4.2cm, fill=black
+% ] 
+% {nombre del nodo}
+
+\node[ROOT] {Título del proyecto}
+[edge from parent fork down]
+    child[LD=14] {node[L1, text width=6cm] {1. \dots}
+        child[L2,LD=9]   {node[L2]   {1.1. \dots}}
+        child[L2,LD=18]  {node[L2]   {1.2. \dots}}
+        child[L2,LD=28]   {node[L2]   {1.3. \dots}
+            child[L2,LD=11] {node[L2]   {1.3-1. \dots}}
+            child[L2,LD=21] {node[L2]   {1.3-2. \dots}}
+            child[L2,LD=32] {node[L2]   {1.3-3. \dots}}
+            child[L2,LD=43] {node[L2]   {1.3-4. \dots}}
+            }
+        }
+    child[LD=14]{node[L1, LD=40] {2. \dots}
+        child[L2,LD=9]  {node[L2, text width=4.2cm]   {2.1. \dots}
+            child[L2,LD=9] {node[L2, text width = 3.5cm]   {2.1-1. \dots}}
+            child[L2,LD=18] {node[L2, text width = 3.5cm]   {2.1-2. \dots}}
+            }
+        child[L2,LD=37]  {node[L2, text width=4.3cm]   {2.2. \dots}
+            child[L2,LD=11] {node[L2, text width = 3.5cm]   {2.2-1. \dots}}
+            child[L2,LD=23] {node[L2, text width = 3.5cm]   {2.2-2. \dots}}
+            child[L2,LD=34] {node[L2, text width = 3.5cm]   {2.2-3. \dots}}
+            }
+        child[L2,LD=81]  {node[L2, text width=5cm]   {2.3. \dots}}
+        child[L2,LD=89]  {node[L2, text width=5cm]   {2.4. \dots}}
+        child[L2,LD=96]  {node[L2, text width=3.5cm]   {2.5. \dots}}
+        }
+    child [LD=14]{node[L1, LD=40] {3. \dots}
+        child[L2,LD=9] {node[L2, text width=3.3cm]   {3.1. \dots}}
+        child[L2,LD=19] {node[L2, text width=3.3cm]   {3.2. \dots}
+            child[L2,LD=11] {node[L2]   {3.2-1. \dots}}
+            child[L2,LD=22] {node[L2]   {3.2-2. \dots}}
+            }
+        child[L2,LD=52] {node[L2, text width=4.6cm]   {3.3. \dots}}
+        child[L2,LD=60] {node[L2, text width=4.6cm]   {3.4. \dots}}
+        child[L2,LD=69] {node[L2, text width=4.6cm]   {3.5. \dots}}
+        child[L2,LD=78] {node[L2, text width=4.6cm]   {3.6. \dots}}
+        child[L2,LD=86] {node[L2]   {3.7. \dots}}
+    };
+        
+\end{tikzpicture}
+\vspace{10pt}
+\caption{Plantilla para Estructura de Descomposición del Proyecto (EDP)}
+\label{fig:edp}
+\end{figure}
+
+% Se devuelve el formato y la geometría de la página a sus valores originales:
+\end{landscape}
+\restoregeometry 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%% - DIAGRAMAS DE GANTT - %%%%%%%%%%%%%%
+
+\section{DIAGRAMAS DE GANTT} \label{sec:gantt}
+
+Los diagramas de Gantt son otro diagrama presente en cualquier TFG o TFM, y especialmente relevante en trabajos relacionados con el \textit{scheduling}. Estos diagramas se construyen en el entorno \texttt{ganttchart}, y existen básicamente dos alternativas: los diagramas en los que el eje temporal se introduce manualmente y aquellos en los que el eje temporal se construye automáticamente a partir de un calendario. 
+
+
+\subsection{Gantt con fechas introducidas manualmente}
+
+En ocasiones es relevante introducir el eje temporal del diagrama manualmente. A continuación se muestra un ejemplo sencillo de diagrama de Gantt:
+
+\vspace{10pt}
+
+\begin{figure}[H]
+\centering
+\begin{ganttchart}[
+x unit=0.45cm, % distancia entre cada unidad horizontal.
+y unit title=0.7cm, % altura de las filas de títulos.
+y unit chart=0.5cm, % altura de cada unidad vertical.
+hgrid, % dibujar las separaciones horizontales.
+vgrid, % dibujar las separaciones verticales.
+bar/.append style={fill=white}, % barras de color blanco por defecto.
+title height=0.6, % separación entre una fila de títulos y otra.
+bar height=0.4, % altura de las barras.
+group right shift=0, 
+group height=.2,
+group peaks height =.15,
+group peaks width=.5,
+group peaks tip position=0.5, % distintos parámetros para el formato de los grupos:
+bar label font =\small, % tamaño de fuente del título de las tareas.
+group label font=\small % tamaño de fuente del título de los grupos.
+]
+{1}{30} % define el número de unidades horizontales con las que cuenta el diagrama, en este caso de 1 a 30.
+
+% Eje temporal (títulos):
+% El comando \\ introduce un salto a la línea (una nueva línea de títulos) y los títulos completan el eje temporal de izquierda a derecha en el orden en el que se han incorporado al código.
+\gantttitle{Elementos pasivos}{30} 
+\\
+\gantttitle{Resistencias}{7} 
+\gantttitle{Condensadores}{16} 
+\gantttitle{Inductores}{7}
+\\
+\gantttitle{10$\Omega$}{3}
+\gantttitle{33$k\Omega$}{4}
+\gantttitle{10$nF$}{10}
+\gantttitle{47$\mu F$}{3}
+\gantttitle{100$\mu F$}{3}
+\gantttitle{1$nH$}{4}
+\gantttitle{15$mH$}{3}
+\\
+
+% Grupo:
+\ganttgroup{Grupo}{1}{17} \\
+
+% Tareas:
+% El estilo de cada barra puede modificarse inmediatamente después del comando \ganttbar, mediante el comando "bar/.append style" seguido de aquello que se quiera modificar (en este caso el color de la barra).
+\ganttbar[bar/.append style={fill=teal!50}]{Título 1}{1}{2} \\
+\ganttbar[bar/.append style={fill=teal!20}]{Título 2}{3}{5} \\
+\ganttbar[bar/.append style={fill=orange!50}]{Título 3}{6}{12} \\
+\ganttbar[bar/.append style={fill=orange!20}]{Título 4}{13}{14} \\
+\ganttbar[bar/.append style={fill=orange!20}]{Título 5}{15}{17}\\
+\ganttbar[bar/.append style={fill=purple!50}]{Título 6}{18}{22} \\
+\ganttbar[bar/.append style={fill=purple!20}]{Título 7}{23}{24} \\
+\ganttbar[bar/.append style={fill=olive!50}]{Título 8}{25}{27} \\
+\ganttbar[bar/.append style={fill=olive!20}]{Título 9}{28}{30} 
+
+% Relaciones de dependencia:
+% La propiedad "link bulge" indica cómo de ancha es la curva del arco (se invita al lector a modificar el valor para ver cómo este afecta al arco).
+% La numeración de los elementos empieza en el número 0 (elem0) y tiene cuenta no sólo de las barras (\ganttbar) sino también de los grupos (\ganttgroup).
+\ganttlink[link bulge=0.5]{elem1}{elem2} 
+\ganttlink[link bulge=0.5]{elem3}{elem4}
+\ganttlink[link bulge=0.5]{elem4}{elem5}
+\ganttlink[link bulge=0.5]{elem6}{elem7}
+\ganttlink[link bulge=0.5]{elem8}{elem9}
+
+\end{ganttchart}
+\caption{Ejemplo de diagrama de Gantt con eje temporal introducido manualmente}
+\label{fig:ganttmanual}
+\end{figure}
+
+\textbf{Nota:} para hacer énfasis en el aspecto personalizable del eje temporal se ha introducido, de forma voluntaria y con fines puramente educativos, una escala totalmente absurda.
+
+Existen cuatro elementos básicos a la hora de elaborar un diagrama de Gantt con \texttt{ganttchart}:
+
+\vspace{-5pt}
+\begin{itemize}
+    \item \textbf{Títulos}: los títulos que aparecen en la parte superior del diagrama y que marcan el comienzo y final de cierto intervalo temporal. Se definen con el comando \textbackslash\texttt{gantttitle} seguido del título y de su extensión temporal (\textbackslash\texttt{gantttitle}\{título\}\{duración\}).
+    \item \textbf{Grupos}: los grupos son elementos que agrupan varias barras del diagrama de Gantt y que suelen representarse mediante una barra de color negro. Se definen con el comando \textbackslash\texttt{ganttgroup} seguido del título del grupo y de sus fechas de comienzo y final, ambas incluidas (\textbackslash\texttt{ganttgroup}\{nombre del grupo\}\{fecha de comienzo\}\{fecha de final\}).
+    \item \textbf{Barras}: las barras son los elementos del diagrama que representan la fecha y duración de realización de una determinada tarea. Se definen con el comando \textbackslash\texttt{ganttbar} seguido del título de la tarea y de sus fechas de comienzo y final, ambas incluidas (\textbackslash\texttt{ganttgroup}\{tarea\} \{fecha de comienzo\}\{fecha de final\}).
+    \item \textbf{Arcos}: los arcos representan relaciones de dependencia entre dos tareas o grupos. Se definen con el comando \textbackslash\texttt{ganttlink} seguido de sus propiedades y de los dos grupos o barras que relaciona entre sí (\textbackslash\texttt{ganttlink}[propiedades]\{elemento de partida\}\{elemento de llegada\}).
+\end{itemize}
+
+Además de estos elementos básicos existen múltiples opciones en lo relativo al estilo o formato del diagrama. Algunas de estas posibilidades se detallan bajo la forma de comentarios en el código encargado de generar el diagrama anterior (figura \ref{fig:ganttmanual}).
+
+
+\subsection{Gantt con fechas automáticas}
+
+El procedimiento para construir un diagrama de Gantt con fechas automáticas es prácticamente idéntico al del diagrama anterior (figura \ref{fig:ganttmanual}), con algunas particularidades (mayoritariamente en lo que se refiere al formato de los títulos y de las fechas) que están comentadas en el código correspondiente al diagrama que aparece a continuación:
+
+\begin{figure}[H]
+\centering
+\begin{ganttchart}[
+x unit=0.062cm, % distancia entre cada unidad horizontal (días).
+y unit chart=0.6cm, % altura de cada unidad vertical.
+y unit title=0.7cm, % altura de las filas de títulos.
+title height=0.6, % separación entre una fila de títulos y otra (1 = ninguna separación).
+hgrid, % dibujar las separaciones verticales.
+vgrid={*6{draw=none}, dotted}, % dibujar las separaciones verticales en intervalos semanales.
+bar/.append style={fill=white}, % barras de color blanco por defecto.
+group peaks width=3,
+group peaks tip position=0.5,
+group peaks height=.1, % distintos parámetros para el formato de los grupos.
+time slot format=isodate, % formato de las fechas.
+] 
+{2020-06-01}{2020-12-27} % inicio y final del eje temporal (año-mes-día).
+
+% Títulos:
+\gantttitlecalendar{year, month=shortname} % Títulos con el año y el mes (en formato "shortname", es decir, jun en lugar de junio, jul en lugar de julio, etc.).
+\\ 
+\gantttitlecalendar[title height=2, title label node/.append style={rotate=90}]{week} % Títulos con los meses en formato vertical (rotate=90).
+\\
+\gantttitle[title/.style={opacity=0}]{}{364}
+\\ % Título invisible para liberar espacio para el título anterior (semanas) 
+
+% El resto del diagrama se construye de la misma manera que el diagrama anterior (figura 8.1), cuyo código esta comentado.
+
+% Duración total:
+\ganttgroup{Duración total}{2020-06-01}{2020-12-21} \\
+
+% Fase 1:
+\ganttgroup{Fase 1}{2020-06-01}{2020-08-19} \\
+\ganttbar[bar/.append style={fill=orange!50}]{Tarea 1.1}{2020-06-01}{2020-07-24} \\
+\ganttbar[bar/.append style={fill=orange!50}]{Tarea 1.2}{2020-07-25}{2020-08-19} \\
+
+% Fase 2:
+\ganttgroup{Fase 2}{2020-08-20}{2020-12-21} \\
+\ganttbar[bar/.append style={fill=teal!50}]{Tarea 2.1}{2020-08-20}{2020-09-26} \\
+\ganttbar[bar/.append style={fill=teal!50}]{Tarea 2.2}{2020-09-27}{2020-11-14} \\
+\ganttbar[bar/.append style={fill=teal!50}]{Tarea 2.3}{2020-11-15}{2020-12-21} 
+
+% Relaciones de dependencia:
+\ganttlink[link bulge=4]{elem2}{elem3} 
+\ganttlink[link bulge=4]{elem5}{elem6} 
+\ganttlink[link bulge=4]{elem6}{elem7} 
+
+\end{ganttchart}
+\caption{Ejemplo de diagrama de Gantt con eje temporal automático}
+\label{fig:ganttauto}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%% - CÓDIGO - %%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\section{CÓDIGO} \label{sec:codigo}
+
+Los  fragmentos de código se incorporan al informe en el entorno \texttt{code} y corresponden al paquete \texttt{listings}. A continuación se presenta el fragmento de código Python que genera la figura \ref{fig:ondacuadrada} introducida en el apartado \ref{sec:graficas}:
+
+\vspace{-5pt}
+
+\begin{code}[H]
+\begin{lstlisting}[firstnumber=1, breakindent=55pt]
+# Se importa las librerías matplotlib y numpy:
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Se configura matplotlib para exportar la gráfica a ".pgf":
+matplotlib.use("pgf")
+matplotlib.rcParams.update({
+    "pgf.texsystem": "pdflatex",
+    "font.family": "serif",
+    "text.usetex": True,
+    "pgf.rcfonts": False,
+})
+
+# Se define el dominio de la variable temporal y el "sample rate":
+t = np.linspace(0, 6, 1000, endpoint=True)
+
+# Se representan los ocho armónicos de la onda cuadrada:
+for k in range(1,9):
+    if k == 1:
+        plt.plot(t, (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1), linewidth=0.5, color="gray", label="Ondas sinusoidales")
+    else:
+        plt.plot(t, (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1), linewidth=0.5, color="gray")
+
+# Se suman los armónicos y se representa la onda cuadrada resultante:
+suma = 0 
+for k in range(1,9):
+    suma = suma + (8/np.pi)*np.sin(2*np.pi*(2*k-1)*0.5*t)/(2*k-1)
+plt.plot(t, suma, linewidth=1, color="red", label="Onda cuadrada resultante")
+
+# Se define diversos aspectos del formato de la gráfica (título, leyenda, etc.):
+plt.title("Onda cuadrada construida por síntesis aditiva \n a partir de sus ocho primeros armónicos")
+plt.xlabel("Tiempo")
+plt.ylabel("Amplitud")
+plt.legend(loc="lower right")
+plt.grid(True, which="both")
+plt.axhline(y=0, color="k")
+plt.ylim(-3, 3)
+
+# Se exporta la gráfica a formato ".pgf" y ".pdf"
+plt.savefig("SquareWave.pgf", format="pgf")
+plt.savefig("SquareWave.pdf", dpi=400)
+plt.clf()
+\end{lstlisting}
+\vspace{-5pt}
+\caption{Código utilizado para generar la gráfica \ref{fig:ondacuadrada}}
+\label{cod:ondacuadrada}
+\end{code}
+
+La inmensa mayoría de operaciones relacionadas con el formato del código se realizan en el preámbulo del documento (cuyo código está comentado). En él se definen todos los parámetros necesarios para que el paquete \texttt{listings} se adapte a código escrito en Python (palabras clave, colores, comentarios, etc.). Si se desea incluir código de otro lenguaje de programación, es necesario modificar el preámbulo para que \texttt{listings} se adapte a dicho lenguaje (en la mayoría de casos se puede encontrar el código adaptado a cada lenguaje de programación en foros relacionados con \LaTeX).
+
+Los únicos parámetros que pueden modificarse en este punto del código son \texttt{firstnumber}, cuyo valor corresponde al número de la primera línea de código (en este caso se ha fijado en 1) y \texttt{breakindent}, que indica el ancho de la indentación al realizar un salto de línea.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%% - BIBLIOGRAFÍA - %%%%%%%%%%%%%%%%
+
+\newpage
+
+El formato elegido para la bibliografía es APA (el recomendable para informes de TFG/TFM), tanto para las referencias a lo largo del documento como para el apartado de bibliografía. El conjunto de operaciones realizadas para establecer el formato de la bibliografía se puede consultar en el preámbulo del documento (en el que se describen algunos de sus parámetros básicos como el contenido de las referencias, el número de autores por cita, etc.).
+
+Citar una referencia es sencillo, basta con utilizar el comando \textbackslash\texttt{cite} seguido del nombre de la referencia correspondiente (el nombre utilizado en el archivo \textit{.bib}, que es esencial cargar en el directorio de trabajo y cuyas principales características pueden consultarse en \url{https://en.wikipedia.org/wiki/BibTeX}), por ejemplo:
+
+\begin{itemize}
+    \item \textit{The Art of Electronics} constituye un fantástico manual (plagado de ejemplos prácticos y explicaciones tangibles) para aprender electrónica, siendo su tercera edición la versión más completa (\cite{horowitz2015}).
+    \item \textit{The Loudspeaker Design Cookbook} (\cite{dickson2007}) es probablemente la guía más completa en cuanto a acústica aplicada al diseño de sistemas de sonido, abarcando desde conceptos teóricos de electroacústica hasta planos para la construcción de sistemas de sonido caseros.
+    \item \textit{Les fous du son} (\cite{dewilde2016}) es un relato cuidadosamente escrito y documentado sobre la historia de los sintetizadores desde Edison hasta nuestros días, pasando por los inventos más inverosímiles como las Ondas Martenot o el Trautonium.
+    \item En su artículo de 2003 (\cite{wang2003}), el co-fundador de Shazam describe el funcionamiento de su algoritmo de búsqueda para archivos de audio.
+\end{itemize}
+
+% Se genera la bibliografía mediante el comando \printbibliography (en ella aparecen únicamente las referencias citadas a lo largo del documento):
+\appto{\bibsetup}{\sloppy}
+\printbibliography[heading=bibintoc, title=BIBLIOGRAFÍA] % el argumento "title" puede modificarse indicando el título que convenga (bibliografía, referencias, etc.).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%% - ANEXOS - %%%%%%%%%%%%%%%%%%%
+
+\newpage
+
+\section*{ANEXOS} \label{sec:anexos} % Se añade un asterisco a \section para que el título no esté numerado.
+\addcontentsline{toc}{section}{ANEXOS} % Al utilizar \section* se ha de añadir manualmente el apartado al índice (Table Of Contents, TOC).
+\markright{ANEXOS} % Al utilizar \section* se ha de añadir manualmente el título del apartado al encabezado.
+
+\renewcommand{\thesubsection}{\Alph{subsection}} % Se numeran los anexos con letras del alphabeto en lugar de números.
+% Se indica que las tablas, figuras y códigos se numeran con el código del anexo (A, B, C, ...) seguido del número de tabla, figura o código dentro del anexo (tabla A.2, figura C.1, etc.)
+\renewcommand{\thetable}{\Alph{subsection}.\arabic{table}}
+\renewcommand{\thefigure}{\Alph{subsection}.\arabic{figure}}
+\renewcommand{\thecode}{\Alph{subsection}.\arabic{code}}
+
+% ---------------- Primer anexo ---------------- %
+\subsection{Primer anexo} \label{sec:anexo1}
+
+Contenido del primer anexo (texto, tablas, figuras, códigos, etc.)
+
+% ---------------- Segundo anexo --------------- %
+\newpage
+\subsection{Segundo anexo} \label{sec:anexo2}
+
+Contenido del segundo anexo (texto, tablas, figuras, códigos, etc.)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%% - FIN DEL DOCUMENTO - %%%%%%%%%%%%%
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
